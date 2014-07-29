@@ -25,9 +25,10 @@
 package picard.sam;
 
 import htsjdk.samtools.SAMFileHeader;
-import htsjdk.samtools.SAMFileReader;
 import htsjdk.samtools.SAMRecord;
 import htsjdk.samtools.SAMTextHeaderCodec;
+import htsjdk.samtools.SamReader;
+import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.util.AsciiWriter;
 import htsjdk.samtools.util.IOUtil;
 import picard.PicardException;
@@ -53,16 +54,18 @@ import java.io.PrintStream;
         programGroup = SamOrBam.class
 )
 public class ViewSam extends CommandLineProgram {
-    public static enum AlignmentStatus { Aligned, Unaligned, All }
-    public static enum PfStatus { PF, NonPF, All }
+    public static enum AlignmentStatus {Aligned, Unaligned, All}
 
-    @Option(shortName=StandardOptionDefinitions.INPUT_SHORT_NAME, doc="The SAM or BAM file to view.")
+    public static enum PfStatus {PF, NonPF, All}
+
+    public final String USAGE = getStandardUsagePreamble() + "Prints a SAM or BAM file to the screen.";
+    @Option(shortName = StandardOptionDefinitions.INPUT_SHORT_NAME, doc = "The SAM or BAM file to view.")
     public File INPUT;
 
-    @Option(doc="Print out all reads, just the aligned reads or just the unaligned reads.")
+    @Option(doc = "Print out all reads, just the aligned reads or just the unaligned reads.")
     public AlignmentStatus ALIGNMENT_STATUS = AlignmentStatus.All;
 
-    @Option(doc="Print out all reads, just the PF reads or just the non-PF reads.")
+    @Option(doc = "Print out all reads, just the PF reads or just the non-PF reads.")
     public PfStatus PF_STATUS = PfStatus.All;
 
     public static void main(final String[] args) {
@@ -80,7 +83,7 @@ public class ViewSam extends CommandLineProgram {
     int writeSamText(PrintStream printStream) {
         try {
             IOUtil.assertFileIsReadable(INPUT);
-            final SAMFileReader in = new SAMFileReader(INPUT);
+            final SamReader in = SamReaderFactory.makeDefault().referenceSequence(REFERENCE_SEQUENCE).open(INPUT);
             final AsciiWriter writer = new AsciiWriter(printStream);
             final SAMFileHeader header = in.getFileHeader();
             if (header.getTextHeader() != null) {
@@ -95,10 +98,10 @@ public class ViewSam extends CommandLineProgram {
                     return 1;
                 }
 
-                if (this.ALIGNMENT_STATUS == AlignmentStatus.Aligned   && rec.getReadUnmappedFlag()) continue;
+                if (this.ALIGNMENT_STATUS == AlignmentStatus.Aligned && rec.getReadUnmappedFlag()) continue;
                 if (this.ALIGNMENT_STATUS == AlignmentStatus.Unaligned && !rec.getReadUnmappedFlag()) continue;
 
-                if (this.PF_STATUS == PfStatus.PF    && rec.getReadFailsVendorQualityCheckFlag()) continue;
+                if (this.PF_STATUS == PfStatus.PF && rec.getReadFailsVendorQualityCheckFlag()) continue;
                 if (this.PF_STATUS == PfStatus.NonPF && !rec.getReadFailsVendorQualityCheckFlag()) continue;
 
                 writer.write(rec.getSAMString());

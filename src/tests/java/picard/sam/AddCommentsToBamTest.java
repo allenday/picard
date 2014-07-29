@@ -2,8 +2,8 @@ package picard.sam;
 
 import htsjdk.samtools.BamFileIoUtils;
 import htsjdk.samtools.SAMFileHeader;
-import htsjdk.samtools.SAMFileReader;
 import htsjdk.samtools.SAMTextHeaderCodec;
+import htsjdk.samtools.SamReaderFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import picard.cmdline.CommandLineProgramTest;
@@ -31,7 +31,7 @@ public class AddCommentsToBamTest extends CommandLineProgramTest {
         final File outputFile = File.createTempFile("addCommentsToBamTest.", BamFileIoUtils.BAM_FILE_EXTENSION);
         runIt(INPUT_FILE, outputFile, commentList);
 
-        final SAMFileHeader newHeader = new SAMFileReader(outputFile).getFileHeader();
+        final SAMFileHeader newHeader = SamReaderFactory.makeDefault().open(addCommentToBam.OUTPUT).getFileHeader();
 
         // The original comments are massaged when they're added to the header. Perform the same massaging here,
         // and then compare the lists
