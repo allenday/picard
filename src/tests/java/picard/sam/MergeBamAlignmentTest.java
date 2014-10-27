@@ -44,8 +44,8 @@ import htsjdk.samtools.util.CloserUtil;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import picard.cmdline.CommandLineProgramTest;
 import picard.PicardException;
+import picard.cmdline.CommandLineProgramTest;
 import picard.sam.testers.ValidateSamTester;
 
 import java.io.File;
@@ -108,6 +108,7 @@ public class MergeBamAlignmentTest extends CommandLineProgramTest {
                 SamPairUtil.PairOrientation.FR, null, null, null
         );
 
+        final SamReader result = SamReaderFactory.makeDefault().open(outputWithSupplemental);
 
         final List<Integer> clipAdapterFlags = new ArrayList<Integer>(Arrays.asList(99, 2147, 147, 2195));
         final List<Integer> foundClipAdapterFlags = new ArrayList<Integer>();

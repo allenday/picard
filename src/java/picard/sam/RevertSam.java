@@ -74,7 +74,6 @@ import java.util.Map;
         programGroup = SamOrBam.class
 )
 public class RevertSam extends CommandLineProgram {
-    public String USAGE = getStandardUsagePreamble() +
 
     @Option(shortName = StandardOptionDefinitions.INPUT_SHORT_NAME, doc = "The input SAM/BAM file to revert the state of.")
     public File INPUT;

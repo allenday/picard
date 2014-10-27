@@ -28,7 +28,6 @@ import java.util.List;
  */
 @CommandLineProgramProperties(
         usage = "Concatenates one or more BAM files together as efficiently as possible. Assumes that the " +
-    public final String USAGE = "Concatenates one or more BAM files together as efficiently as possible. Assumes that the " +
                 "list of BAM files provided as INPUT are in the order that they should be concatenated and simply concatenates the bodies " +
                 "of the BAM files while retaining the header from the first file.  Operates via copying of the gzip blocks directly for speed " +
                 "but also supports generation of an MD5 on the output and indexing of the output BAM file. Only support BAM files, does not " +

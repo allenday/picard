@@ -222,11 +222,9 @@ public class CommandLineParser {
         String usagePreamble = "";
         if (null != programProperties) {
             usagePreamble += programProperties.usage();
-        }
-        else if (positionalArguments == null) {
+        } else if (positionalArguments == null) {
             usagePreamble += defaultUsagePreamble;
-        }
-        else {
+        } else {
             usagePreamble += defaultUsagePreambleWithPositionalArguments;
         }
         if (null != this.programVersion && 0 < this.programVersion.length()) {
@@ -797,7 +795,7 @@ public class CommandLineParser {
                 sb.append(enumConstants[i].toString());
 
                 if (isClpEnum) {
-                    sb.append(" (").append(((ClpEnum)enumConstants[i]).getHelpDoc()).append(")\n");
+                    sb.append(" (").append(((ClpEnum) enumConstants[i]).getHelpDoc()).append(")\n");
                 }
             }
             sb.append("} ");
@@ -814,7 +812,7 @@ public class CommandLineParser {
                 sb.append("This option must be specified at least ").append(optionDefinition.minElements).append(" times. ");
             } else {
                 sb.append("This option may be specified between ").append(optionDefinition.minElements).append(
-                " and ").append(optionDefinition.maxElements).append(" times. ");
+                        " and ").append(optionDefinition.maxElements).append(" times. ");
             }
 
             if (!optionDefinition.defaultValue.equals("null")) {
@@ -889,15 +887,21 @@ public class CommandLineParser {
             if (!optionDefinition.overridable && optionMap.containsKey(optionDefinition.name)) {
                 throw new CommandLineParserDefinitionException(optionDefinition.name + " has already been used.");
             }
-            optionMap.put(optionDefinition.name, optionDefinition);
             if (optionDefinition.shortName.length() > 0) {
-                if (!optionDefinition.overridable && optionMap.containsKey(optionDefinition.shortName)) {
-                    throw new CommandLineParserDefinitionException(optionDefinition.shortName +
-                            " has already been used");
+                if (optionMap.containsKey(optionDefinition.shortName)) {
+                    if (!optionDefinition.overridable) {
+                        throw new CommandLineParserDefinitionException(optionDefinition.shortName +
+                                " has already been used");
+                    }
+                } else {
+                    optionMap.put(optionDefinition.shortName, optionDefinition);
                 }
-                optionMap.put(optionDefinition.shortName, optionDefinition);
             }
-            optionDefinitions.add(optionDefinition);
+            //if we are overridable and we already exist don't add again to the option defs
+            if (!(optionDefinition.overridable && optionMap.containsKey(optionDefinition.name))) {
+                optionDefinitions.add(optionDefinition);
+                optionMap.put(optionDefinition.name, optionDefinition);
+            }
         } catch (final IllegalAccessException e) {
             throw new CommandLineParserDefinitionException(field.getName() +
                     " must have public visibility to have @Option annotation");

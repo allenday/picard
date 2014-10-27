@@ -25,7 +25,6 @@ import java.util.Random;
  */
 @CommandLineProgramProperties(
         usage = "Randomly down-sample a SAM or BAM file to retain " +
-    public final String USAGE = getStandardUsagePreamble() + " Randomly down-sample a SAM or BAM file to retain " +
                 "a random subset of the reads. Mate-pairs are either both kept or both discarded. Reads marked as not primary " +
                 "alignments are all discarded. Each read is given a probability P of being retained - results with the exact " +
                 "same input in the same order and with the same value for RANDOM_SEED will produce the same results.",

@@ -25,26 +25,27 @@
 package picard.sam.markduplicates;
 
 import htsjdk.samtools.SAMReadGroupRecord;
-import picard.cmdline.CommandLineProgramProperties;
+import htsjdk.samtools.SAMRecord;
 import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.metrics.MetricsFile;
 import htsjdk.samtools.util.Histogram;
 import htsjdk.samtools.util.IOUtil;
 import htsjdk.samtools.util.Log;
-import picard.cmdline.programgroups.Metrics;
 import htsjdk.samtools.util.PeekableIterator;
 import htsjdk.samtools.util.ProgressLogger;
 import htsjdk.samtools.util.SequenceUtil;
 import htsjdk.samtools.util.SortingCollection;
 import htsjdk.samtools.util.StringUtil;
 import picard.PicardException;
+import picard.cmdline.CommandLineProgramProperties;
 import picard.cmdline.Option;
 import picard.cmdline.StandardOptionDefinitions;
-import picard.cmdline.Usage;
+import picard.cmdline.programgroups.Metrics;
 import picard.sam.DuplicationMetrics;
 import picard.sam.markduplicates.util.AbstractOpticalDuplicateFinderCommandLineProgram;
 import picard.sam.markduplicates.util.OpticalDuplicateFinder;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
@@ -97,9 +98,9 @@ import static java.lang.Math.pow;
         usageShort = "Estimates library complexity from the sequence of read pairs",
         programGroup = Metrics.class
 )
-            public class EstimateLibraryComplexity extends AbstractOpticalDuplicateFinderCommandLineProgram {
+public class EstimateLibraryComplexity extends AbstractOpticalDuplicateFinderCommandLineProgram {
 
-    @Option(shortName= StandardOptionDefinitions.INPUT_SHORT_NAME, doc="One or more files to combine and " +
+    @Option(shortName = StandardOptionDefinitions.INPUT_SHORT_NAME, doc = "One or more files to combine and " +
             "estimate library complexity from. Reads can be mapped or unmapped.")
     public List<File> INPUT;
 
